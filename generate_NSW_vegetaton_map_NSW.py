@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Blah
+Generate six vegetation types land cover map for NSW
 
 That's all folks.
 """
@@ -15,16 +15,16 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-import scipy.stats
-from matplotlib import cm
+import xarray as xr
+
+def main(fname):
+
+    ds = xr.open_dataset(fname)
+
+    print(ds)
 
 
-def main():
+if __name__ == "__main__":
 
-
-
-
-
-
-    
+    fname = "data/nvis_data_raster.nc"
+    main(fname)
