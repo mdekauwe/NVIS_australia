@@ -16,11 +16,13 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
-
+import gdal
 
 def main(fname):
 
-    
+    dataset = gdal.Open(fname, gdal.GA_ReadOnly)
+    print(dataset)
+
 
 if __name__ == "__main__":
 
