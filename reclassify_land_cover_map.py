@@ -78,17 +78,21 @@ lc = np.where(lc == 21, 6, lc) # Other grasslands, herblands, sedgelands and rus
 # Other - mask
 lc = np.where(lc >= 24, np.nan, lc) # Mask
 
-print(np.nanmin(lc), np.nanmax(lc))
-
+"""
 fig = plt.figure()
 cmap = plt.cm.viridis
-bounds = np.arange(8)
+bounds = np.arange(7)
 norm = colors.BoundaryNorm(bounds, cmap.N)
+labels = ["RAF", "EUF", "ACF", "SHB", "GRA", "OTH"]
+
 img = plt.imshow(lc, origin='upper', interpolation='nearest',
                  cmap=cmap, norm=norm)
-plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
-#plt.show()
+cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
+cbar.set_ticklabels(labels)
+tick_locs = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
+cbar.set_ticks(tick_locs)
 fig.savefig("SE_AUS_veg_types.png", dpi=150)
+"""
 
 ds['biome_code'][:,:] = lc
 
