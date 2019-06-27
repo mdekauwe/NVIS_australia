@@ -69,12 +69,17 @@ lc = np.where(lc == 23, 6, lc) # Mangroves
 lc = np.where(lc == 10, 6, lc) # Other forests and woodlands
 lc = np.where(lc == 31, 6, lc) # Other open woodlands
 lc = np.where(lc == 32, 6, lc) # Mallee open woodlands and sparse mallee shrublands
+lc = np.where(lc == 29, 6, lc) # Regrowth, modified native vegetation
+lc = np.where(lc == 30, 6, lc) # Unclassified forest
+
 
 # Shurblands
 lc = np.where(lc == 15, 7, lc) # Low closed forests and tall closed shrublands
 lc = np.where(lc == 17, 7, lc) # Other shrublands
 lc = np.where(lc == 22, 7, lc) # Chenopod shrublands, samphire shrublands and forblands
 lc = np.where(lc == 18, 7, lc) # Heathlands
+lc = np.where(lc == 26, 7, lc) # # Unclassified native vegetation
+
 
 # Grasslands
 lc = np.where(lc == 19, 8, lc) # Tussock grasslands
@@ -82,7 +87,13 @@ lc = np.where(lc == 20, 8, lc) # Hummock grasslands
 lc = np.where(lc == 21, 8, lc) # Other grasslands, herblands, sedgelands and rushlands
 
 # Other - mask
-lc = np.where(lc >= 24, np.nan, lc) # Mask
+lc = np.where(lc == 24, np.nan, lc) # Inland aquatic: freshwater, salt lakes, lagoons
+lc = np.where(lc == 25, np.nan, lc) # Cleared, non-native vegetation, buildings
+lc = np.where(lc == 27, np.nan, lc) # Naturally bare: sand, rock, claypan, mudflat
+lc = np.where(lc == 28, np.nan, lc) # Sea and estuaries
+lc = np.where(lc == 99, np.nan, lc) # Unknown/no data
+
+#lc = np.where(lc >= 24, np.nan, lc) # Mask
 
 """
 fig = plt.figure()
