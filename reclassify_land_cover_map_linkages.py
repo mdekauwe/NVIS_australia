@@ -67,6 +67,8 @@ lc = np.where(lc == 8, 6, lc) # Casuarina forests and woodlands
 lc = np.where(lc == 9, 6, lc) # Melaleuca forests and woodlands
 lc = np.where(lc == 23, 6, lc) # Mangroves
 lc = np.where(lc == 10, 6, lc) # Other forests and woodlands
+lc = np.where(lc == 31, 6, lc) # Other open woodlands
+lc = np.where(lc == 32, 6, lc) # Mallee open woodlands and sparse mallee shrublands
 
 # Shurblands
 lc = np.where(lc == 15, 7, lc) # Low closed forests and tall closed shrublands
