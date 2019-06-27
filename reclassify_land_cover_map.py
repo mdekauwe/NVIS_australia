@@ -90,6 +90,6 @@ plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
 #plt.show()
 fig.savefig("SE_AUS_veg_types.png", dpi=150)
 
-ds['biome_code'] = lc
+ds['biome_code'][:,:] = lc
 
 ds.to_netcdf(out_fname)

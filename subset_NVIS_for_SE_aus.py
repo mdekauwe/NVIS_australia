@@ -21,7 +21,7 @@ out_fname = "data/SE_aus_reprojected_NVIS.nc"
 
 ds = xr.open_dataset(fname)
 
-lat_bnds, lon_bnds = [-25, -40], [140, 158]
+lat_bnds, lon_bnds = [-25, -40], [140, 154]
 ds = ds.sel(latitude=slice(*lat_bnds), longitude=slice(*lon_bnds))
 ds.biome_code.shape
 
