@@ -25,6 +25,8 @@ fname = "data/SE_aus_reprojected_NVIS.nc"
 out_fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
 lc = ds.biome_code
+lc = lc.astype(np.int16)
+
 
 """
 cmap = plt.cm.viridis
@@ -78,6 +80,7 @@ lc = np.where(lc == 17, 7, lc) # Other shrublands
 lc = np.where(lc == 22, 7, lc) # Chenopod shrublands, samphire shrublands and forblands
 lc = np.where(lc == 18, 7, lc) # Heathlands
 lc = np.where(lc == 26, 7, lc) # Unclassified native vegetation
+#lc = np.where(lc == 25, 7, lc) # Cleared, non-native vegetation, buildings
 
 # Grasslands
 lc = np.where(lc == 19, 8, lc) # Tussock grasslands
@@ -86,28 +89,14 @@ lc = np.where(lc == 21, 8, lc) # Other grasslands, herblands, sedgelands and rus
 
 # Other - mask
 lc = np.where(lc == 24, np.nan, lc) # Inland aquatic: freshwater, salt lakes, lagoons
-lc = np.where(lc == 25, np.nan, lc) # Cleared, non-native vegetation, buildings
 lc = np.where(lc == 27, np.nan, lc) # Naturally bare: sand, rock, claypan, mudflat
 lc = np.where(lc == 28, np.nan, lc) # Sea and estuaries
 lc = np.where(lc == 99, np.nan, lc) # Unknown/no data
-
-
-"""
-fig = plt.figure()
-cmap = plt.cm.viridis
-bounds = np.arange(7)
-norm = colors.BoundaryNorm(bounds, cmap.N)
-labels = ["RAF", "EUF", "ACF", "SHB", "GRA", "OTH"]
-
-img = plt.imshow(lc, origin='upper', interpolation='nearest',
-                 cmap=cmap, norm=norm)
-cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
-cbar.set_ticklabels(labels)
-tick_locs = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5]
-cbar.set_ticks(tick_locs)
-fig.savefig("SE_AUS_veg_types.png", dpi=150)
-"""
+#vals = np.unique(lc[~np.isnan(lc)])
+#for v in vals:
+#    print(v)
+lc = np.where(lc >= 9, np.nan, lc) # Mask the rest
+lc = np.where(lc < 1, np.nan, lc)  # Mask the rest
 
 ds['biome_code'][:,:] = lc
-
 ds.to_netcdf(out_fname)

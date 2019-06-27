@@ -17,19 +17,25 @@ from matplotlib import colors
 fname = "data/SE_aus_veg_types.nc"
 
 ds = xr.open_dataset(fname)
-lc = ds.biome_code
+lc = ds.biome_code.values
 
 fig = plt.figure()
 cmap = plt.cm.viridis
-bounds = np.arange(9)
+bounds = np.arange(1,10) # 2 more than the number of classes = 8
+print(bounds)
+print(len(bounds))
 norm = colors.BoundaryNorm(bounds, cmap.N)
 labels = ["RAF", "WSF", "DSF", "GRW", "SAW", "MIF", "SHB", "GRA"]
+
+
+#img = plt.imshow(lc, origin='upper')
+#plt.colorbar()
 
 img = plt.imshow(lc, origin='upper', interpolation='nearest',
                  cmap=cmap, norm=norm)
 cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
 cbar.set_ticklabels(labels)
-tick_locs = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
+tick_locs = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
 cbar.set_ticks(tick_locs)
 
 #plt.show()
