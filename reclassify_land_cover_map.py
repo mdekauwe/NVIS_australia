@@ -6,6 +6,8 @@ The vegetation classes we are aiming to create here are: Rainforest,
 Eucalypt Forests, Acacia Forests and Woodlands,
 Miscellaneous Forests and Woodlands, Shurblands, Grasslands, Other (mask)
 
+See doc/major-veg-map.pdf
+
 That's all folks.
 """
 __author__ = "Martin De Kauwe"
@@ -15,76 +17,79 @@ __email__ = "mdekauwe@gmail.com"
 
 import xarray as xr
 import matplotlib.pyplot as plt
-import matplotlib as mpl
+from matplotlib import colors
 import numpy as np
-
+import sys
 
 fname = "data/SE_aus_reprojected_NVIS.nc"
 out_fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
 lc = ds.biome_code
 
+"""
+cmap = plt.cm.viridis
+bounds = np.arange(23)
+norm = colors.BoundaryNorm(bounds, cmap.N)
+img = plt.imshow(lc, origin='upper', interpolation='nearest',
+                 cmap=cmap, norm=norm)
+plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
+plt.show()
+sys.exit()
+"""
+
 # Fact sheet explanation to classes:
 # https://www.environment.gov.au/land/publications/nvis-fact-sheet-series-4-2
 
 # rainforest
-lc = np.where(lc == 1, 0, lc)  # Rainforests and vine thickets
+lc = np.where(lc == 1, 1, lc)  # Rainforests and vine thickets
 
 # Eucalypt Forests
-lc = np.where(lc == 2, 1, lc) # Eucalypt tall open forests, are equivalent to the concept of ‘wet sclerophyll forest’,
-lc = np.where(lc == 3, 1, lc) # Eucalypt open forests: correspond well with ‘dry sclerophyll forests’,
-lc = np.where(lc == 4, 1, lc) # Eucalypt low open forests
-lc = np.where(lc == 5, 1, lc) # Eucalypt woodlands
-lc = np.where(lc == 11, 1, lc) # Eucalypt open woodlands
-lc = np.where(lc == 12, 1, lc) # Tropical eucalypt woodlands/grasslands
+lc = np.where(lc == 2, 2, lc) # Eucalypt tall open forests, are equivalent to the concept of ‘wet sclerophyll forest’,
+lc = np.where(lc == 3, 2, lc) # Eucalypt open forests: correspond well with ‘dry sclerophyll forests’,
+lc = np.where(lc == 4, 2, lc) # Eucalypt low open forests
+lc = np.where(lc == 5, 2, lc) # Eucalypt woodlands
+lc = np.where(lc == 11, 2, lc) # Eucalypt open woodlands
+lc = np.where(lc == 12, 2, lc) # Tropical eucalypt woodlands/grasslands
 
 # Acacia Forests and Woodlands
-lc = np.where(lc == 6, 2, lc) # Acacia forests and woodlands
-lc = np.where(lc == 13, 2, lc) # Acacia open woodlands
+lc = np.where(lc == 6, 3, lc) # Acacia forests and woodlands
+lc = np.where(lc == 13, 3, lc) # Acacia open woodlands
 
 # Miscellaneous Forests and Woodlands
-lc = np.where(lc == 7, 3, lc) # Callitris forests and woodlands
-lc = np.where(lc == 8, 3, lc) # Casuarina forests and woodlands
-lc = np.where(lc == 9, 3, lc) # Melaleuca forests and woodlands
-lc = np.where(lc == 23, 3, lc) # Mangroves
-lc = np.where(lc == 10, 3, lc) # Other forests and woodlands
+lc = np.where(lc == 7, 4, lc) # Callitris forests and woodlands
+lc = np.where(lc == 8, 4, lc) # Casuarina forests and woodlands
+lc = np.where(lc == 9, 4, lc) # Melaleuca forests and woodlands
+lc = np.where(lc == 23, 4, lc) # Mangroves
+lc = np.where(lc == 10, 4, lc) # Other forests and woodlands
 
 # Shurblands
-lc = np.where(lc == 14, 4, lc) # Mallee woodlands and shrublands
-lc = np.where(lc == 15, 4, lc) # Low closed forests and tall closed shrublands
-lc = np.where(lc == 16, 4, lc) # Acacia shrublands
-lc = np.where(lc == 17, 4, lc) # Other shrublands
-lc = np.where(lc == 22, 4, lc) # Chenopod shrublands, samphire shrublands and forblands
-lc = np.where(lc == 18, 4, lc) # Heathlands
+lc = np.where(lc == 14, 5, lc) # Mallee woodlands and shrublands
+lc = np.where(lc == 15, 5, lc) # Low closed forests and tall closed shrublands
+lc = np.where(lc == 16, 5, lc) # Acacia shrublands
+lc = np.where(lc == 17, 5, lc) # Other shrublands
+lc = np.where(lc == 22, 5, lc) # Chenopod shrublands, samphire shrublands and forblands
+lc = np.where(lc == 18, 5, lc) # Heathlands
 
 # Grasslands
-lc = np.where(lc == 19, 5, lc) # Tussock grasslands
-lc = np.where(lc == 20, 5, lc) # Hummock grasslands
-lc = np.where(lc == 21, 5, lc) # Other grasslands, herblands, sedgelands and rushlands
+lc = np.where(lc == 19, 6, lc) # Tussock grasslands
+lc = np.where(lc == 20, 6, lc) # Hummock grasslands
+lc = np.where(lc == 21, 6, lc) # Other grasslands, herblands, sedgelands and rushlands
 
 # Other - mask
-lc = np.where(lc >= 24, 6, lc) # Mask
+lc = np.where(lc >= 24, np.nan, lc) # Mask
 
+print(np.nanmin(lc), np.nanmax(lc))
 
-ax1 = plt.imshow(lc, origin='upper')
-plt.colorbar()
-#cmap = plt.cm.jet  # define the colormap
+fig = plt.figure()
+cmap = plt.cm.viridis
+bounds = np.arange(8)
+norm = colors.BoundaryNorm(bounds, cmap.N)
+img = plt.imshow(lc, origin='upper', interpolation='nearest',
+                 cmap=cmap, norm=norm)
+plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
+#plt.show()
+fig.savefig("SE_AUS_veg_types.png", dpi=150)
 
-# extract all colors from the .jet map
-#cmaplist = [cmap(i) for i in range(cmap.N)]
+ds['biome_code'] = lc
 
-# force the first color entry to be white
-#cmaplist[0] = (0, 0, 0, 1.0)
-
-# create the new map
-#cmap = mpl.colors.LinearSegmentedColormap.from_list('Custom cmap', cmaplist, cmap.N)
-
-#bounds = np.linspace(0, 6, 6)
-#norm = mpl.colors.BoundaryNorm(bounds, cmap.N)
-#cb = plt.colorbar.ColorbarBase(ax1, cmap=cmap, norm=norm,
-#                               spacing='proportional', ticks=bounds,
-#                               boundaries=bounds, format='%1i')
-
-plt.show()
-
-#lc.to_netcdf(out_fname)
+ds.to_netcdf(out_fname)
