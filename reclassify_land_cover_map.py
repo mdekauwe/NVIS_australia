@@ -15,6 +15,7 @@ __email__ = "mdekauwe@gmail.com"
 
 import xarray as xr
 import matplotlib.pyplot as plt
+import numpy as np
 
 fname = "data/SE_aus_reprojected_NVIS.nc"
 out_fname = "data/SE_aus_veg_types.nc"
@@ -26,7 +27,7 @@ lc = ds.biome_code
 
 # rainforest
 lc = np.where(lc == 1, 0, lc)  # Rainforests and vine thickets
-lc = np.where(lc == 12, 3, lc) # Tropical eucalypt woodlands/grasslands
+lc = np.where(lc == 12, 0, lc) # Tropical eucalypt woodlands/grasslands
 
 # wet sclerophyll forest
 lc = np.where(lc == 2, 1, lc) # Eucalypt tall open forests, are equivalent to the concept of ‘wet sclerophyll forest’,
@@ -61,6 +62,7 @@ lc = np.where(lc == 22, 5, lc) # Chenopod shrublands, samphire shrublands and fo
 lc = np.where(lc == 23, 5, lc) # Mangroves
 lc = np.where(np.logical_and(lc >= 24, lc <= 30), 5, lc) # Other cover types
 
+lc = np.where(lc > 30, np.nan, lc)
 
 plt.imshow(lc, origin='upper')
 plt.colorbar()
