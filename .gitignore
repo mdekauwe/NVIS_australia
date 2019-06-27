@@ -1,3 +1,4 @@
 *.nc
 data/raw_data/*.nc
 data/*
+*.png
