@@ -17,6 +17,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 
 fname = "data/SE_aus_reprojected_NVIS.nc"
+out_fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
 lc = ds.biome_code
 
@@ -64,3 +65,5 @@ lc = np.where(np.logical_and(lc >= 24, lc <= 30, 5, lc) # Other cover types
 plt.imshow(lc, origin='upper')
 plt.colorbar()
 plt.show()
+
+lc.to_netcdf(out_fname)
