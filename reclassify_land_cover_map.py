@@ -59,7 +59,7 @@ lc = np.where(lc == 20, 5, lc) # Hummock grasslands
 lc = np.where(lc == 21, 5, lc) # Other grasslands, herblands, sedgelands and rushlands
 lc = np.where(lc == 22, 5, lc) # Chenopod shrublands, samphire shrublands and forblands
 lc = np.where(lc == 23, 5, lc) # Mangroves
-lc = np.where(np.logical_and(lc >= 24, lc <= 30, 5, lc) # Other cover types
+lc = np.where(np.logical_and(lc >= 24, lc <= 30), 5, lc) # Other cover types
 
 
 plt.imshow(lc, origin='upper')
