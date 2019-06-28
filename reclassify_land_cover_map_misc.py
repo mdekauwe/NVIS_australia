@@ -42,45 +42,12 @@ sys.exit()
 # Fact sheet explanation to classes:
 # https://www.environment.gov.au/land/publications/nvis-fact-sheet-series-4-2
 
-# Rainforest
-lc = np.where(lc == 1, 1, lc)  # Rainforests and vine thickets
-
-# Wet sclerophyll forest
-lc = np.where(lc == 2, 2, lc) # Eucalypt tall open forests, are equivalent to the concept of ‘wet sclerophyll forest’,
-lc = np.where(lc == 10, 2, lc) # Other forests and woodlands
-lc = np.where(lc == 8, 2, lc) # Casuarina forests and woodlands
-
-# Dry sclerophyll forest
-lc = np.where(lc == 3, 3, lc) # Eucalypt open forests: correspond well with ‘dry sclerophyll forests’,
-lc = np.where(lc == 4, 3, lc) # Eucalypt low open forests
-lc = np.where(lc == 7, 3, lc) # Callitris forests and woodlands
-lc = np.where(lc == 31, 3, lc) # Other open woodlands
-
-# Grassy woodlands
-lc = np.where(lc == 5, 4, lc) # Eucalypt woodlands
-lc = np.where(lc == 11, 4, lc) # Eucalypt open woodlands
-lc = np.where(lc == 12, 4, lc) # Tropical eucalypt woodlands/grasslands
-lc = np.where(lc == 25, 4, lc) # Cleared, non-native vegetation, buildings
-lc = np.where(lc == 29, 4, lc) # Regrowth, modified native vegetation
-
-# Semiarid woodland
-lc = np.where(lc == 6, 5, lc) # Acacia forests and woodlands
-lc = np.where(lc == 13, 5, lc) # Acacia open woodlands
-lc = np.where(lc == 14, 5, lc) # Mallee woodlands and shrublands
-lc = np.where(lc == 16, 5, lc) # Acacia shrublands
-lc = np.where(lc == 32, 5, lc) # Mallee open woodlands and sparse mallee shrublands
-lc = np.where(lc == 15, 5, lc) # Low closed forests and tall closed shrublands
-lc = np.where(lc == 17, 5, lc) # Other shrublands
-lc = np.where(lc == 22, 5, lc) # Chenopod shrublands, samphire shrublands and forblands
-lc = np.where(lc == 18, 5, lc) # Heathlands
-lc = np.where(lc == 26, 5, lc) # Unclassified native vegetation
-lc = np.where(lc == 19, 5, lc) # Tussock grasslands
-lc = np.where(lc == 20, 5, lc) # Hummock grasslands
 
 # Miscellaneous Forests and Woodlands
-#lc = np.where(lc == 8, 6, lc) # Casuarina forests and woodlands
-#lc = np.#
-#
+lc = np.where(lc == 8, 1, lc) # Casuarina forests and woodlands
+lc = np.where(lc == 10, 2, lc) # Other forests and woodlands
+lc = np.where(lc == 31, 3, lc) # Other open woodlands
+lc = np.where(lc == 29, 4, lc) # Regrowth, modified native vegetation
 
 
 
@@ -96,8 +63,24 @@ lc = np.where(lc == 30, np.nan, lc) # Unclassified forest
 #vals = np.unique(lc[~np.isnan(lc)])
 #for v in vals:
 #    print(v)
-lc = np.where(lc >= 6, np.nan, lc) # Mask the rest
+lc = np.where(lc >= 5, np.nan, lc) # Mask the rest
 lc = np.where(lc < 1, np.nan, lc)  # Mask the rest
 
-ds['biome_code'][:,:] = lc
-ds.to_netcdf(out_fname)
+cmap = plt.cm.viridis
+
+bounds = np.unique(lc[~np.isnan(lc)])
+bounds = np.append(bounds, bounds[-1]+1)
+
+print(bounds)
+
+norm = colors.BoundaryNorm(bounds, cmap.N)
+img = plt.imshow(lc, origin='upper', interpolation='nearest',
+                 cmap=cmap, norm=norm)
+cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
+tick_locs = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
+cbar.set_ticks(tick_locs)
+
+plt.show()
+
+#ds['biome_code'][:,:] = lc
+#ds.to_netcdf(out_fname)
