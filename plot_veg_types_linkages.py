@@ -22,8 +22,8 @@ lc = ds.biome_code.values
 fig = plt.figure()
 cmap = plt.cm.viridis
 bounds = np.arange(1,10) # 2 more than the number of classes = 8
-print(bounds)
-print(len(bounds))
+#print(bounds)
+#print(len(bounds))
 norm = colors.BoundaryNorm(bounds, cmap.N)
 labels = ["RAF", "WSF", "DSF", "GRW", "SAW", "MIF", "SHB", "GRA"]
 
