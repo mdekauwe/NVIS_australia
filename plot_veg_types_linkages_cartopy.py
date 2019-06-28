@@ -48,9 +48,10 @@ ax.coastlines(resolution='10m', linewidth=1.0, color='black')
 ax.add_feature(cartopy.feature.OCEAN)
 
 cmap = plt.cm.viridis
-bounds = np.arange(1,10)
+bounds = np.unique(lc[~np.isnan(lc)])
+bounds = np.append(bounds, bounds[-1]+1)
 norm = colors.BoundaryNorm(bounds, cmap.N)
-labels = ["RAF", "WSF", "DSF", "GRW", "SAW", "MIF", "SHB", "GRA"]
+labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
 
 
 img = ax.imshow(lc, origin='upper', transform=ccrs.PlateCarree(),

@@ -19,24 +19,21 @@ fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
 lc = ds.biome_code.values
 
-fig = plt.figure()
+
+fig = plt.figure(figsize=(9,6))
 cmap = plt.cm.viridis
-bounds = np.arange(1,10) # 2 more than the number of classes = 8
-#print(bounds)
-#print(len(bounds))
+
+bounds = np.unique(lc[~np.isnan(lc)])
+bounds = np.append(bounds, bounds[-1]+1)
+
+print(bounds)
+
 norm = colors.BoundaryNorm(bounds, cmap.N)
-labels = ["RAF", "WSF", "DSF", "GRW", "SAW", "MIF", "SHB", "GRA"]
-
-
-#img = plt.imshow(lc, origin='upper')
-#plt.colorbar()
-
 img = plt.imshow(lc, origin='upper', interpolation='nearest',
                  cmap=cmap, norm=norm)
 cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds)
-cbar.set_ticklabels(labels)
-tick_locs = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
+tick_locs = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
 cbar.set_ticks(tick_locs)
 
-#plt.show()
-fig.savefig("SE_AUS_veg_types.png", dpi=150)
+plt.show()
+#fig.savefig("SE_AUS_veg_types_misc.png", dpi=150)
