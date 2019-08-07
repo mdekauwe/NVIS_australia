@@ -21,6 +21,7 @@ from matplotlib import colors
 import numpy as np
 import sys
 
+
 fname = "data/SE_aus_reprojected_NVIS.nc"
 out_fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
@@ -98,6 +99,14 @@ lc = np.where(lc == 30, np.nan, lc) # Unclassified forest
 #    print(v)
 lc = np.where(lc >= 6, np.nan, lc) # Mask the rest
 lc = np.where(lc < 1, np.nan, lc)  # Mask the rest
+
+lc = np.where(lc == 1, 18, lc)
+lc = np.where(lc == 2, 19, lc)
+lc = np.where(lc == 3, 20, lc)
+lc = np.where(lc == 4, 21, lc)
+lc = np.where(lc == 5, 22, lc)
+lc = np.where(lc <= 6, np.nan, lc) # Mask the rest
+
 
 ds['biome_code'][:,:] = lc
 ds.to_netcdf(out_fname)

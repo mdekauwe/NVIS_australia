@@ -18,6 +18,9 @@ import cartopy
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import sys
 
+
+
+
 fname = "data/SE_aus_veg_types.nc"
 
 ds = xr.open_dataset(fname)
@@ -60,7 +63,7 @@ img = ax.imshow(lc, origin='upper', transform=ccrs.PlateCarree(),
 cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds,
                     orientation='vertical', shrink=0.7, pad=0.07)
 cbar.set_ticklabels(labels)
-tick_locs = [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
+tick_locs = [18.5, 19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5]
 cbar.set_ticks(tick_locs)
 cbar.ax.set_title("Vegetation\ntypes", fontsize=12)
 
