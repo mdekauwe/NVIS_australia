@@ -2,3 +2,4 @@
 data/raw_data/*.nc
 data/*
 *.png
+.DS_Store
