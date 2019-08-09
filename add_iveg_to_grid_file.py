@@ -46,7 +46,7 @@ def main():
     iveg.long_name = "CSIRO classification of veg type"
     iveg.missing_value = -1
 
-    iveg[:,:,:] = ds_iveg.iveg.values
+    iveg[:,:] = ds_iveg.iveg.values
     f.close()
 
     ds.close()
