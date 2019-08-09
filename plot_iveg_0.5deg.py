@@ -54,7 +54,8 @@ cmap = plt.cm.viridis
 bounds = np.unique(lc[~np.isnan(lc)])
 bounds = np.append(bounds, bounds[-1]+1)
 norm = colors.BoundaryNorm(bounds, cmap.N)
-labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
+#labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
+labels = ["WSF", "DSF", "GRW", "SAW"]
 
 
 img = ax.imshow(lc, origin='upper', transform=ccrs.PlateCarree(),
@@ -63,7 +64,7 @@ img = ax.imshow(lc, origin='upper', transform=ccrs.PlateCarree(),
 cbar = plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=bounds,
                     orientation='vertical', shrink=0.7, pad=0.07)
 cbar.set_ticklabels(labels)
-tick_locs = [18.5, 19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5]
+tick_locs = [19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5, 26.5]
 cbar.set_ticks(tick_locs)
 cbar.ax.set_title("Vegetation\ntypes", fontsize=12)
 
