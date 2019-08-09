@@ -20,11 +20,30 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
 import sys
-
+import netCDF4
 
 fname = "data/SE_aus_reprojected_NVIS.nc"
 out_fname = "data/SE_aus_veg_types.nc"
 ds = xr.open_dataset(fname)
+
+ds_out = ds.copy(deep=True)
+ds_out = ds_out.drop("biome_code")
+
+ds_out.to_netcdf(out_fname)
+ds_out.close()
+
+
+f = netCDF4.Dataset(out_fname, 'r+')
+
+nc_attrs = f.ncattrs()
+nc_dims = [dim for dim in f.dimensions]
+nc_vars = [var for var in f.variables]
+
+iveg = f.createVariable("iveg", 'i4', ('latitude', 'longitude'))
+iveg.long_name = "CSIRO classification of veg type"
+iveg.missing_value = -1
+
+
 lc = ds.biome_code
 lc = lc.astype(np.int16)
 
@@ -86,27 +105,32 @@ lc = np.where(lc == 20, 5, lc) # Hummock grasslands
 
 
 # Other - mask
-lc = np.where(lc == 24, np.nan, lc) # Inland aquatic: freshwater, salt lakes, lagoons
-lc = np.where(lc == 27, np.nan, lc) # Naturally bare: sand, rock, claypan, mudflat
-lc = np.where(lc == 28, np.nan, lc) # Sea and estuaries
-lc = np.where(lc == 99, np.nan, lc) # Unknown/no data
-lc = np.where(lc == 9, np.nan, lc) # Melaleuca forests and woodlands
-lc = np.where(lc == 23, np.nan, lc) # Mangroves
-lc = np.where(lc == 21, np.nan, lc) # Other grasslands, herblands, sedgelands and rushlands
-lc = np.where(lc == 30, np.nan, lc) # Unclassified forest
+lc = np.where(lc == 24, -1, lc) # Inland aquatic: freshwater, salt lakes, lagoons
+lc = np.where(lc == 27, -1, lc) # Naturally bare: sand, rock, claypan, mudflat
+lc = np.where(lc == 28, -1, lc) # Sea and estuaries
+lc = np.where(lc == 99, -1, lc) # Unknown/no data
+lc = np.where(lc == 9, -1, lc) # Melaleuca forests and woodlands
+lc = np.where(lc == 23, -1, lc) # Mangroves
+lc = np.where(lc == 21, -1, lc) # Other grasslands, herblands, sedgelands and rushlands
+lc = np.where(lc == 30, -1, lc) # Unclassified forest
 #vals = np.unique(lc[~np.isnan(lc)])
 #for v in vals:
 #    print(v)
-lc = np.where(lc >= 6, np.nan, lc) # Mask the rest
-lc = np.where(lc < 1, np.nan, lc)  # Mask the rest
+lc = np.where(lc >= 6, -1, lc) # Mask the rest
+lc = np.where(lc < 1, -1, lc)  # Mask the rest
 
 lc = np.where(lc == 1, 18, lc)
 lc = np.where(lc == 2, 19, lc)
 lc = np.where(lc == 3, 20, lc)
 lc = np.where(lc == 4, 21, lc)
 lc = np.where(lc == 5, 22, lc)
-lc = np.where(lc <= 6, np.nan, lc) # Mask the rest
+lc = np.where(lc <= 6, -1, lc) # Mask the rest
 
+iveg[:,:] = lc
+f.close()
 
-ds['biome_code'][:,:] = lc
-ds.to_netcdf(out_fname)
+#ds['biome_code'][:,:] = lc
+#ds.to_netcdf(out_fname)
+#print(out_fname)
+
+ds.close()
