@@ -30,6 +30,10 @@ def main():
     ds = xr.open_dataset(in_fname)
     ds_iveg = xr.open_dataset(iveg_fname)
 
+    lc = ds_iveg.iveg.values
+    lc = lc.astype(np.int16)
+    lc = np.where(lc <= 18, -1, lc) # Mask the rest
+
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
 
@@ -46,7 +50,7 @@ def main():
     iveg.long_name = "CSIRO classification of veg type"
     iveg.missing_value = -1
 
-    iveg[:,:] = ds_iveg.iveg.values
+    iveg[:,:] = lc
     f.close()
 
     ds.close()
