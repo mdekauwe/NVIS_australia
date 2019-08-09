@@ -33,7 +33,8 @@ def main():
     lc = ds_iveg.iveg.values
     lc = lc.astype(np.int16)
     lc = np.where(lc <= 18, -1, lc) # Mask the rest
-
+    lc = np.where(ds.iveg > 0, lc, -1)
+    
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
 
