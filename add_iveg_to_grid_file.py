@@ -30,31 +30,18 @@ def main():
     ds = xr.open_dataset(in_fname)
     ds_iveg = xr.open_dataset(iveg_fname)
 
-    lc = ds_iveg.iveg.values
+    lc = ds_iveg.iveg
     lc = lc.astype(np.int16)
-    lc = np.where(lc <= 18, -1, lc) # Mask the rest
-    lc = np.where(ds.iveg > 0, lc, -1)
-    
+    lc = lc.where(lc != -32768)
+    lc = lc.fillna(-1)
+
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
-
+    ds_out['iveg'] = lc
     ds_out.to_netcdf(out_fname)
-    ds_out.close()
-
-    f = netCDF4.Dataset(out_fname, 'r+')
-
-    nc_attrs = f.ncattrs()
-    nc_dims = [dim for dim in f.dimensions]
-    nc_vars = [var for var in f.variables]
-
-    iveg = f.createVariable("iveg", 'i4', ('latitude', 'longitude'))
-    iveg.long_name = "CSIRO classification of veg type"
-    iveg.missing_value = -1
-
-    iveg[:,:] = lc
-    f.close()
 
     ds.close()
+    ds_out.close()
     ds_iveg.close()
 
 if __name__ == "__main__":
