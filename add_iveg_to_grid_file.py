@@ -15,36 +15,45 @@ import numpy as np
 import xarray as xr
 import os
 import sys
+from os.path import join
 
 def main():
 
-    fdir = "/Users/mdekauwe/Desktop/"
-    grid_fname = "gridinfo_mmy_MD_elev_orig_std_avg-sand_mask.nc"
+    path = "/Users/mdekauwe/Desktop/"
+    #path = "/g/data1a/w35/mgk576/research/CABLE_runs/cms"
+    source = xr.open_dataset(join(path,
+                             'gridinfo_mmy_MD_elev_orig_std_avg-sand_mask.nc'))
+
+    se_aus = xr.open_dataset('data/SE_aus_veg_types_0.5deg.nc')
     out_grid_fname = "gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_new_pfts.nc"
-    in_fname = os.path.join(fdir, grid_fname)
-    out_fname = os.path.join(fdir, out_grid_fname)
-    iveg_fname = "data/SE_aus_veg_types_0.5deg.nc"
 
-    ds = xr.open_dataset(in_fname)
-    ds_iveg = xr.open_dataset(iveg_fname)
+    # This is the original values
+    #source.iveg.plot(vmin=0, vmax=22)
 
-    ds_iveg['iveg'] = ds_iveg.iveg.fillna(-1).astype('i4')
+    # Netcdf metadata with the type and fill value
+    source.iveg.encoding
 
-    # NVIS regridding has some pixels in the sea, match the original grid
-    ds_iveg['iveg'] = xr.where(np.isnan(ds.iveg), -1, ds_iveg['iveg'])
-    ds_iveg['iveg'].attrs={'long_name':'iveg', 'min':19,
-                           'max':22, 'missing_value':-1}
+    # The new values to use
+    #se_aus.iveg.plot(vmin=0, vmax=22)
 
+    # Merge the two fields
+    # Where se_aus.iveg is defined (found using numpy.isfinite) use the values
+    # from se_aus.iveg
+    # Elsewhere use the original values from source.iveg
+    merged_iveg = xr.where(np.isfinite(se_aus.iveg), se_aus.iveg, source.iveg)
+    merged_iveg.plot(vmin=0, vmax=22)
 
+    # Copy the netcdf metadata to the new field (type, missing values)
+    merged_iveg.encoding = source.iveg.encoding
 
-    ds_out = ds.copy(deep=True)
-    ds_out = ds_out.drop("iveg")
-    ds_out['iveg'] = ds_iveg['iveg']
-    ds_out.to_netcdf(out_fname)
+    # Maintain the same land-sea pixels.
+    merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
 
-    ds.close()
-    ds_out.close()
-    ds_iveg.close()
+    # Replace the source dataset's iveg field with the new version and save to
+    # file
+    source['iveg'] = merged_iveg
+
+    source.to_netcdf(os.path.join(path, out_grid_fname))
 
 if __name__ == "__main__":
 
