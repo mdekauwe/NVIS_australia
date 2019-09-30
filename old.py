@@ -12,38 +12,49 @@ __email__ = "mdekauwe@gmail.com"
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import glob
 import xarray as xr
+import netCDF4 as nc
+import datetime
 import os
 import sys
+import shutil
+import netCDF4
 
 def main():
 
-    fdir = "/Users/mdekauwe/Desktop/"
-    grid_fname = "gridinfo_mmy_MD_elev_orig_std_avg-sand_mask.nc"
-    out_grid_fname = "gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_new_pfts.nc"
-    in_fname = os.path.join(fdir, grid_fname)
-    out_fname = os.path.join(fdir, out_grid_fname)
+    in_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask.nc"
+    out_fname = "/Users/mdekauwe/Desktop/gridinfo_mmy_MD_elev_orig_std_avg-sand_mask_new_pfts.nc"
     iveg_fname = "data/SE_aus_veg_types_0.5deg.nc"
 
     ds = xr.open_dataset(in_fname)
     ds_iveg = xr.open_dataset(iveg_fname)
 
-    ds_iveg['iveg'] = ds_iveg.iveg.fillna(-1).astype('i4')
-
-    # NVIS regridding has some pixels in the sea, match the original grid
-    ds_iveg['iveg'] = xr.where(np.isnan(ds.iveg), -1, ds_iveg['iveg'])
-    ds_iveg['iveg'].attrs={'long_name':'iveg', 'min':19,
-                           'max':22, 'missing_value':-1}
-
-
+    lc = ds_iveg.iveg.values
+    lc = lc.astype(np.int16)
+    lc = np.where(lc <= 18, -1, lc) # Mask the rest
+    lc = np.where(ds.iveg > 0, lc, -1)
 
     ds_out = ds.copy(deep=True)
     ds_out = ds_out.drop("iveg")
-    ds_out['iveg'] = ds_iveg['iveg']
+
     ds_out.to_netcdf(out_fname)
+    ds_out.close()
+
+    f = netCDF4.Dataset(out_fname, 'r+')
+
+    nc_attrs = f.ncattrs()
+    nc_dims = [dim for dim in f.dimensions]
+    nc_vars = [var for var in f.variables]
+
+    iveg = f.createVariable("iveg", 'i4', ('latitude', 'longitude'))
+    iveg.long_name = "CSIRO classification of veg type"
+    iveg.missing_value = -1
+
+    iveg[:,:] = lc
+    f.close()
 
     ds.close()
-    ds_out.close()
     ds_iveg.close()
 
 if __name__ == "__main__":
