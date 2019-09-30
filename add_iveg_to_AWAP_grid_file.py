@@ -57,7 +57,7 @@ def main():
     # Where se_aus.iveg is defined (found using numpy.isfinite) use the values
     # from se_aus.iveg
     # Elsewhere use the original values from source.iveg
-    merged_iveg = xr.where(np.isfinite(se_aus.iveg), se_aus.iveg, np.nan)
+    merged_iveg = xr.where(np.isfinite(se_aus.iveg), se_aus.iveg, source.iveg)
     merged_iveg.plot(vmin=0, vmax=22)
 
     # Copy the netcdf metadata to the new field (type, missing values)
