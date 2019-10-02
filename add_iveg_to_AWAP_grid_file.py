@@ -50,6 +50,7 @@ def main():
     # Netcdf metadata with the type and fill value
     source.iveg.encoding
     print (source.iveg.encoding)
+    print(source.iveg.encoding['_FillValue'])
     # The new values to use
     #se_aus.iveg.plot(vmin=0, vmax=22)
 
@@ -57,15 +58,16 @@ def main():
     # Where se_aus.iveg is defined (found using numpy.isfinite) use the values
     # from se_aus.iveg
     # Elsewhere use the original values from source.iveg
-    merged_iveg = xr.where(np.isfinite(se_aus.iveg), se_aus.iveg, source.iveg)
-    merged_iveg.plot(vmin=0, vmax=22)
+    merged_iveg = xr.where(np.isfinite(se_aus.iveg), se_aus.iveg, source.iveg.encoding['_FillValue'])
+    #merged_iveg.plot(vmin=0, vmax=22)
 
     # Copy the netcdf metadata to the new field (type, missing values)
     merged_iveg.encoding = source.iveg.encoding
 
     # Maintain the same land-sea pixels.
-    #merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
-    merged_iveg = xr.where(np.isnan(source.iveg), -9999.0, merged_iveg)
+    merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
+    #merged_iveg = xr.where(np.isnan(source.iveg), source.iveg.encoding['_FillValue'], merged_iveg)
+    #merged_iveg = xr.where(np.logical_or(source.iveg < -500.0, np.isnan(source.iveg)), -9999.0, merged_iveg)
 
     # Replace the source dataset's iveg field with the new version and save to
     # file
