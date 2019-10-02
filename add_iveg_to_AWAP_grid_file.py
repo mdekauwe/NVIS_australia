@@ -49,7 +49,7 @@ def main():
 
     # Netcdf metadata with the type and fill value
     source.iveg.encoding
-
+    print (source.iveg.encoding)
     # The new values to use
     #se_aus.iveg.plot(vmin=0, vmax=22)
 
@@ -65,7 +65,7 @@ def main():
 
     # Maintain the same land-sea pixels.
     #merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
-    merged_iveg = xr.where(np.isnan(source.iveg), np.nan, merged_iveg)
+    merged_iveg = xr.where(np.isnan(source.iveg), -9999.0, merged_iveg)
 
     # Replace the source dataset's iveg field with the new version and save to
     # file
