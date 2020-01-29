@@ -54,6 +54,8 @@ ax.add_feature(cartopy.feature.OCEAN)
 cmap = plt.cm.viridis
 bounds = np.unique(lc[~np.isnan(lc)])
 print(bounds)
+bounds = [18., 19., 20., 21., 22.]
+lc = np.where(lc<0.0, np.nan, lc)
 bounds = np.append(bounds, bounds[-1]+1)
 norm = colors.BoundaryNorm(bounds, cmap.N)
 labels = ["RAF", "WSF", "DSF", "GRW", "SAW"]
@@ -79,5 +81,5 @@ ax.text(0.5, -0.1, 'Longitude', va='bottom', ha='center',
         transform=ax.transAxes)
 #
 plt.show()
-fig.savefig("SE_AUS_veg_types_AWAP.png", dpi=150, bbox_inches='tight',
+fig.savefig("SE_AUS_veg_types_AWAP.png", dpi=300, bbox_inches='tight',
             pad_inches=0.1)

@@ -21,8 +21,10 @@ def main():
 
     path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw"
     #path = "/g/data1a/w35/mgk576/research/CABLE_runs/cms"
+    #source = xr.open_dataset(join(path,
+    #                         'MD_elev_orig_std_avg-sand_AWAP_AU_mask.nc'))
     source = xr.open_dataset(join(path,
-                             'MD_elev_orig_std_avg-sand_AWAP_AU_mask.nc'))
+                             'gridinfo_AWAP_CSIRO_AU_NAT.nc'))
 
     se_aus = xr.open_dataset('data/SE_aus_veg_types_AWAP_grid.nc')
 
@@ -65,7 +67,7 @@ def main():
     merged_iveg.encoding = source.iveg.encoding
 
     # Maintain the same land-sea pixels.
-    merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
+    #merged_iveg = xr.where(np.isnan(source.iveg), -1, merged_iveg)
     #merged_iveg = xr.where(np.isnan(source.iveg), source.iveg.encoding['_FillValue'], merged_iveg)
     #merged_iveg = xr.where(np.logical_or(source.iveg < -500.0, np.isnan(source.iveg)), -9999.0, merged_iveg)
 
