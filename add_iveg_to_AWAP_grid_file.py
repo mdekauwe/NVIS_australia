@@ -17,16 +17,12 @@ import os
 import sys
 from os.path import join
 
-def main():
+def main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname):
 
-    path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw"
-    #path = "/g/data1a/w35/mgk576/research/CABLE_runs/cms"
-    #source = xr.open_dataset(join(path,
-    #                         'MD_elev_orig_std_avg-sand_AWAP_AU_mask.nc'))
-    source = xr.open_dataset(join(path,
-                             'gridinfo_AWAP_CSIRO_AU_NAT.nc'))
+    source = xr.open_dataset(join(grid_path, grid_fname))
 
-    se_aus = xr.open_dataset('data/SE_aus_veg_types_AWAP_grid.nc')
+    # File with new linkages veg types.
+    se_aus = xr.open_dataset(nvis_iveg_fname)
 
     # AWAP data is upside down, flip it
     se_aus["iveg"][:,:] = np.flipud(se_aus["iveg"][:,:])
@@ -44,15 +40,15 @@ def main():
     #sys.exit()
     # First had to do
     # cdo sellonlatbox,112,154,-44,-10 data/SE_aus_veg_types_AWAP_grid.nc data/SE_aus_veg_types_AWAP_fixed_grid.nc
-    out_grid_fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_grid.nc"
+    #out_grid_fname = "/Users/mdekauwe/Desktop/SE_aus_veg_types_AWAP_grid.nc"
 
     # This is the original values
     #source.iveg.plot(vmin=0, vmax=22)
 
     # Netcdf metadata with the type and fill value
     source.iveg.encoding
-    print (source.iveg.encoding)
-    print(source.iveg.encoding['_FillValue'])
+    #print (source.iveg.encoding)
+    #print(source.iveg.encoding['_FillValue'])
     # The new values to use
     #se_aus.iveg.plot(vmin=0, vmax=22)
 
@@ -75,8 +71,12 @@ def main():
     # file
     source['iveg'] = merged_iveg
 
-    source.to_netcdf(os.path.join(path, out_grid_fname))
+    source.to_netcdf(os.path.join(grid_path, out_grid_fname))
 
 if __name__ == "__main__":
 
-    main()
+    grid_path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw/grid"
+    grid_fname = "gridinfo_AWAP_CSIRO_AU_NAT.nc"
+    nvis_iveg_fname = "data/SE_aus_veg_types_AWAP_grid.nc"
+    out_grid_fname = "/Users/mdekauwe/Desktop/SE_AU_AWAP_NVIS_iveg_grid.nc"
+    main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname)
