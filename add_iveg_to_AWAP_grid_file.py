@@ -75,8 +75,16 @@ def main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname):
 
 if __name__ == "__main__":
 
+    # CSIRO soil
     grid_path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw/grid"
     grid_fname = "gridinfo_AWAP_CSIRO_AU_NAT.nc"
     nvis_iveg_fname = "data/SE_aus_veg_types_AWAP_grid.nc"
-    out_grid_fname = "/Users/mdekauwe/Desktop/SE_AU_AWAP_NVIS_iveg_grid.nc"
+    out_grid_fname = "/Users/mdekauwe/Desktop/SE_AU_AWAP_NVIS_iveg_csiro_soil_grid.nc"
+    main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname)
+
+    # OpenLand soil
+    grid_path = "/Users/mdekauwe/Desktop/SE_AUS_AWAP_grid_mask_files/raw/grid"
+    grid_fname = "gridinfo_AWAP_OpenLandMap.nc"
+    nvis_iveg_fname = "data/SE_aus_veg_types_AWAP_grid.nc"
+    out_grid_fname = "/Users/mdekauwe/Desktop/SE_AU_AWAP_NVIS_iveg_openland_soil_grid.nc"
     main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname)
