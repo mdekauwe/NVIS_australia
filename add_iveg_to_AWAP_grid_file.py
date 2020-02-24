@@ -24,7 +24,7 @@ def main(grid_path, grid_fname, nvis_iveg_fname, out_grid_fname):
     # File with new linkages veg types.
     se_aus = xr.open_dataset(nvis_iveg_fname)
 
-    # AWAP data is upside down, flip it
+    # New NVIS class stuff is upside down, flip it
     se_aus["iveg"][:,:] = np.flipud(se_aus["iveg"][:,:])
 
     # Rounding issue on the lat lon, so they won't match, just use the
